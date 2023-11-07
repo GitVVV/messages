@@ -1,6 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
+    "openapi": "3.1.0",
     "title": "HTTP-сервіс Messages",
     "description": "Сервіс-посередник для взаємодії 1С з Kafka.\n\nВикористовується для отримання та відправки повідомлень з Kafka через REST API.",
     "contact": {
