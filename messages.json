@@ -1,7 +1,6 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.3",
   "info": {
-    "openapi": "3.1.0",
     "title": "HTTP-сервіс Messages",
     "description": "Сервіс-посередник для взаємодії 1С з Kafka.\n\nВикористовується для отримання та відправки повідомлень з Kafka через REST API.",
     "contact": {
@@ -298,15 +297,11 @@
         "properties": {
           "topik": {
             "type": "boolean",
-            "examples": [
-              "true"
-            ]
+            "example": true
           },
           "hash": {
             "type": "boolean",
-            "examples": [
-              "true"
-            ]
+            "example": true
           }
         }
       },
@@ -323,15 +318,17 @@
         "properties": {
           "BankName": {
             "type": "array",
-            "examples": [
-              "[\"Приватбанк\"]"
-            ]
+            "items": {
+              "type": "string",
+              "example": "Приватбанк"
+            }
           },
           "MerchantId": {
             "type": "array",
-            "examples": [
-              "[\"S1LV0KZX\"]"
-            ]
+            "items": {
+              "type": "string",
+              "example": "S1LV0KZX"
+            }
           }
         }
       },
@@ -344,66 +341,46 @@
         "properties": {
           "is": {
             "type": "string",
-            "examples": [
-              "FIN"
-            ]
+            "example": "FIN"
           },
           "topic": {
             "type": "string",
-            "examples": [
-              "POSCashWithdrawal"
-            ]
+            "example": "POSCashWithdrawal"
           },
           "dateFrom": {
             "type": "string",
-            "examples": [
-              "20231017"
-            ]
+            "example": "20231017"
           },
           "dateTo": {
             "type": "string",
-            "examples": [
-              "20231017"
-            ]
+            "example": "20231017"
           },
           "objectDateFrom": {
             "type": "string",
-            "examples": [
-              "20231017"
-            ]
+            "example": "20231017"
           },
           "objectDateTo": {
             "type": "string",
-            "examples": [
-              "20231017"
-            ]
+            "example": "20231017"
           },
           "headers": {
             "type": "boolean",
-            "examples": [
-              true
-            ]
+            "example": true
           },
           "sort": {
             "type": "boolean",
-            "examples": [
-              true
-            ]
+            "example": true
           },
           "qty": {
             "type": "integer",
-            "examples": [
-              5
-            ]
+            "example": 5
           },
           "listNum": {
             "type": "array",
             "items": {
               "type": "integer"
             },
-            "examples": [
-              "[52]"
-            ]
+            "example": "[52]"
           },
           "object": {
             "$ref": "#/components/schemas/ObjectBody"
@@ -418,9 +395,7 @@
         "properties": {
           "X-MESSAGE-TYPE": {
             "type": "string",
-            "examples": [
-              "CashWithdrawal"
-            ]
+            "example": "CashWithdrawal"
           }
         }
       },
@@ -429,78 +404,54 @@
         "properties": {
           "id": {
             "type": "string",
-            "examples": [
-              "23555d55-9cf6-46c9-88f7-c88f1a45aad7"
-            ]
+            "example": "23555d55-9cf6-46c9-88f7-c88f1a45aad7"
           },
           "date": {
             "type": "string",
-            "examples": [
-              "2023-10-17T12:58:45"
-            ]
+            "example": "2023-10-17T12:58:45"
           },
           "dateObject": {
             "type": "string",
-            "examples": [
-              "2023-10-17T12:58:45"
-            ]
+            "example": "2023-10-17T12:58:45"
           },
           "headers": {
             "$ref": "#/components/schemas/ResponsesIncomingHeaders"
           },
           "body": {
             "type": "string",
-            "examples": [
-              "Тут знаходиться структура тіла документа з топіка..."
-            ]
+            "example": "Тут знаходиться структура тіла документа з топіка..."
           },
           "work": {
             "type": "boolean",
-            "examples": [
-              true
-            ]
+            "example": true
           },
           "offset": {
             "type": "integer",
-            "examples": [
-              52
-            ]
+            "example": 52
           },
           "topic": {
             "type": "string",
-            "examples": [
-              "POSCashWithdrawal"
-            ]
+            "example": "POSCashWithdrawal"
           },
           "key": {
             "type": "string",
-            "examples": [
-              "Ч049301-0087_17.10.2023"
-            ]
+            "example": "Ч049301-0087_17.10.2023"
           },
           "pertition": {
             "type": "string",
-            "examples": [
-              "0"
-            ]
+            "example": "0"
           },
           "hashSHA1": {
             "type": "string",
-            "examples": [
-              "60584A50E7879092369073A03E561883A447476A"
-            ]
+            "example": "60584A50E7879092369073A03E561883A447476A"
           },
           "headersSHA1": {
             "type": "string",
-            "examples": [
-              "DA39A3EE5E6B4B0D3255BFEF95601890AFD80709"
-            ]
+            "example": "DA39A3EE5E6B4B0D3255BFEF95601890AFD80709"
           },
           "bodySHA1": {
             "type": "string",
-            "examples": [
-              "60584A50E7879092369073A03E561883A447476A"
-            ]
+            "example": "60584A50E7879092369073A03E561883A447476A"
           }
         }
       },
@@ -509,21 +460,15 @@
         "properties": {
           "is": {
             "type": "string",
-            "examples": [
-              "FIN"
-            ]
+            "example": "FIN"
           },
           "topic": {
             "type": "string",
-            "examples": [
-              "POSCashWithdrawal"
-            ]
+            "example": "POSCashWithdrawal"
           },
           "qty": {
             "type": "integer",
-            "examples": [
-              1
-            ]
+            "example": 1
           },
           "data": {
             "type": "array",
@@ -543,23 +488,17 @@
         "properties": {
           "is": {
             "type": "string",
-            "examples": [
-              "FIN"
-            ]
+            "example": "FIN"
           },
           "topic": {
             "type": "string",
-            "examples": [
-              "POSCashWithdrawal"
-            ]
+            "example": "POSCashWithdrawal"
           },
           "data": {
             "type": "array",
             "items": {
               "type": "string",
-              "examples": [
-                "3a2bee63-fe12-4a6c-82d2-869a684321b0"
-              ]
+              "example": "3a2bee63-fe12-4a6c-82d2-869a684321b0"
             }
           }
         }
@@ -569,21 +508,15 @@
         "properties": {
           "is": {
             "type": "string",
-            "examples": [
-              "FIN"
-            ]
+            "example": "FIN"
           },
           "topic": {
             "type": "string",
-            "examples": [
-              "POSCashWithdrawal"
-            ]
+            "example": "POSCashWithdrawal"
           },
           "result": {
             "type": "string",
-            "examples": [
-              "OK"
-            ]
+            "example": "OK"
           }
         }
       }
