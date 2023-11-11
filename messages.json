@@ -37,7 +37,7 @@
           "incoming"
         ],
         "summary": "Отримання вхідних повідомлень",
-        "description": "Отримання вхідних повідомлень згідно умовам запиту. Параметри \"is\" та \"topic\" обов'язкові, інші можуть бути відсутніми зовсім, їх значення за замовчуванням є в описі параметра. Параметр \"headers\" має свої особливості.",
+        "description": "Отримання вхідних повідомлень згідно умовам запиту. Параметри \"is\" та \"topic\" обов'язкові, інші можуть бути відсутніми зовсім, їх значення за замовчуванням є в описі параметра.",
         "operationId": "incomingPost",
         "parameters": [
           {
@@ -91,19 +91,6 @@
             }
           },
           {
-            "name": "headers",
-            "in": "query",
-            "description": "Флаг вивантаження заголовків топіка (необов'язковий, за замовчуванням false). Для програмування на 1С - через особливості найменування ключів в заголовках, приймаюча сторона зможе отримати відповідь сервіса, при включенні цього флагу, тільки у вигляді \"Соответствие\".",
-            "schema": {
-              "type": "boolean",
-              "default": false,
-              "enum": [
-                true,
-                false
-              ]
-            }
-          },
-          {
             "name": "all",
             "in": "query",
             "description": "Флаг вивантаження всіх записів по топіку (необов'язковий, за замовчуванням false). При значенні false будуть вивантажуватися тільки необроблені раніше.",
@@ -119,7 +106,7 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "Флаг сортування записів (необов'зковий, за замовчувванням true). При значенні true сортування за зростанням (FIFO), при значенні false сортування за спаданням (LIFO).",
+            "description": "Флаг сортування записів за номером топіка (необов'зковий, за замовчувванням true). При значенні true сортування за зростанням (FIFO), при значенні false сортування за спаданням (LIFO).",
             "schema": {
               "type": "boolean",
               "default": true,
@@ -132,10 +119,18 @@
           {
             "name": "qty",
             "in": "query",
-            "description": "Кількість повідомлень у відповіді на запит (необов'язково, за замовчуванням 100). Не рекомендується виставлення великих значень, можливе завершення запиту з помилкою по таймауту або розміру відповіді.",
+            "description": "Кількість повідомлень у відповіді на запит (необов'язково, за замовчуванням 200). Не рекомендується виставлення великих значень, можливе завершення запиту з помилкою по таймауту або розміру відповіді.",
             "schema": {
-              "default": 100,
+              "default": 200,
               "type": "integer"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Відбір за типом документа (наприклад \"CashWithdrawal\"), з заголовку повідомлення (необов'зково).",
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -161,7 +156,7 @@
           {
             "name": "return",
             "in": "query",
-            "description": "Структура управління вивантажуємими даними, для зменьшення об'ему трафіка (необов'язково, за замовчуванням повністю). Секция topic виключає вивантаження всіх даних по топіку (окрім тіла документа), секція hash виключає вивантаження hash-підпису тіла документа. Виключити - це false.",
+            "description": "Структура управління вивантажуємими даними, для зменьшення об'ему трафіка (необов'язково). Секція object керує вивантаженням даних по об'єкту (дата, тип повідомлення), секція topic керує вивантаженням всіх даних по топіку (окрім тіла документа - це увімкнено завжди), секція hash керує вивантаженням hash-підпису тіла, заголовків документа, секція headers керує вивантаженням даних заголовків топіка. За замовчуванням увімкнено object та topic, та вимкнено hash та headers.",
             "schema": {
               "$ref": "#/components/schemas/ReturnShema"
             }
@@ -221,9 +216,17 @@
             }
           },
           {
+            "name": "qty",
+            "in": "query",
+            "description": "Кількість кодів повідомлень у масиві (необов'язково, але зручно бачити в тілі запиту біля масиву, шоб не рахувати вручну коли знадобиться, особливо коли їх багато)",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
             "name": "data",
             "in": "query",
-            "description": "Масив кодів повідомлень топіка, які оброблено.",
+            "description": "Масив кодів повідомлень топіка, які оброблено. Можливо пустий, але в такому випадку і відправляти нічого не потрібно",
             "required": true,
             "explode": true,
             "schema": {
@@ -295,13 +298,21 @@
       "ReturnBody": {
         "type": "object",
         "properties": {
+          "object": {
+            "type": "boolean",
+            "example": true
+          },
           "topik": {
             "type": "boolean",
             "example": true
           },
           "hash": {
             "type": "boolean",
-            "example": true
+            "example": false
+          },
+          "headers": {
+            "type": "boolean",
+            "example": false
           }
         }
       },
@@ -363,13 +374,13 @@
             "type": "string",
             "example": "20231017"
           },
-          "headers": {
-            "type": "boolean",
-            "example": true
-          },
           "sort": {
             "type": "boolean",
             "example": true
+          },
+          "type": {
+            "type": "string",
+            "example": "CashWithdrawal"
           },
           "qty": {
             "type": "integer",
@@ -390,10 +401,20 @@
           }
         }
       },
+      "ArrayResponsesIncomingHeaders": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ResponsesIncomingHeaders"
+        }
+      },
       "ResponsesIncomingHeaders": {
         "type": "object",
         "properties": {
-          "X-MESSAGE-TYPE": {
+          "key": {
+            "type": "string",
+            "example": "X-MESSAGE-TYPE"
+          },
+          "value": {
             "type": "string",
             "example": "CashWithdrawal"
           }
@@ -414,12 +435,12 @@
             "type": "string",
             "example": "2023-10-17T12:58:45"
           },
-          "headers": {
-            "$ref": "#/components/schemas/ResponsesIncomingHeaders"
-          },
-          "body": {
+          "typeObject": {
             "type": "string",
-            "example": "Тут знаходиться структура тіла документа з топіка..."
+            "example": "CashWithdrawal"
+          },
+          "headers": {
+            "$ref": "#/components/schemas/ArrayResponsesIncomingHeaders"
           },
           "work": {
             "type": "boolean",
@@ -452,6 +473,10 @@
           "bodySHA1": {
             "type": "string",
             "example": "60584A50E7879092369073A03E561883A447476A"
+          },
+          "body": {
+            "type": "string",
+            "example": "Тут знаходиться структура тіла документа з топіка..."
           }
         }
       },
@@ -493,6 +518,10 @@
           "topic": {
             "type": "string",
             "example": "POSCashWithdrawal"
+          },
+          "qty": {
+            "type": "integer",
+            "example": 1
           },
           "data": {
             "type": "array",
